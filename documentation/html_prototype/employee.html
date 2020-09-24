@@ -2,12 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Employee - information</title>
-    <!--Navigate menu-->
-    <a href="./departments.html" name="departments list">Departments</a>
-    <a href="./employees.html" name="employees list">Employees</a>
+    <title>DankoCRM</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Bootstrap CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!--  End Bootstrap CSS -->
+
 </head>
 <body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" xmlns="http://www.w3.org/1999/html">
+
+    <a class="navbar-brand" href="departments.html">DankoCRM</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="departments.html">Departments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="employees.html">Employees</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+
+    <!--Контейнер Bootstrap-->
+    <div class="container mt-5" >
+
+
+        <div class="form-group mt-3">
+            <form method="post" enctype="multipart/form-data" action="employees.html" >
+
+                <div class="form-group">
+                    <input type="text" class="form-control" name="firstName"
+                           placeholder="Enter First Name" value="Alon">
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" name="lastName"
+                           placeholder="Enter Last Name" value="Draik">
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" name="salary" value="15 000"
+                           placeholder="Enter salary">
+                </div>
+
+                <div class="form-group">
+                    <select class="form-control" id="exampleFormControlSelect1" name="idDepartment">
+                        <option value="1">Developer</option>
+                        <option value="2">HR</option>
+                    </select>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    Birthday
+                    <input type="date" class="form-control" name="date" >
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Bootstrap CSS -->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!--Отрисовывает всплывающие Toool type-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <!--Добавляет JQuery плагины обеспечивающие функциональность-->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
 
 </body>
 </html>
