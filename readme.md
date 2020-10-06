@@ -10,15 +10,15 @@ Technologies used
 ```
 #Creating a database and adding test data
 
-#####1.Step One: Create a table - DEPARTMENT
+##### 1.Step One: Create a table - DEPARTMENT
 ```
 CREATE TABLE DEPARTMENT( ID BIGINT AUTO_INCREMENT PRIMARY KEY, NAME VARCHAR(255));
 ```
-#####2.Step two: Create a table - EMPLOYEE
+##### 2.Step two: Create a table - EMPLOYEE
 ```
 CREATE TABLE EMPLOYEE( ID BIGINT AUTO_INCREMENT PRIMARY KEY, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), SALARY INT, DATE_OF_BIRTH TIMESTAMP DEFAULT CURRENT_TIMESTAMP, ID_DEPARTMENT BIGINT);
 ```
-#####3.Step three: Enter test data.
+##### 3.Step three: Enter test data.
 ```
 INSERT INTO "DEPARTMENT" ("NAME") VALUES ('Header')
 INSERT INTO "DEPARTMENT" ("NAME") VALUES ('Support')
