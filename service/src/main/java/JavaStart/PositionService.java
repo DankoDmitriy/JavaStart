@@ -6,31 +6,27 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DepartmentService extends Util implements DepartmentDao {
+public class PositionService extends Util implements PositionDao {
     private Connection connection = getConnection();
 
-    public Department add(Department department) {
+    @Override
+    public Position add(Position position) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-//        String sql = "INSERT INTO DEPARTMENT (ID, NAME) VALUES (?, ?)";
-        String sql = department.getId() == null ? "INSERT INTO DEPARTMENT (NAME, STATUS) VALUES (?, ?)" :
-                "INSERT INTO DEPARTMENT (ID, NAME, STATUS) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO POSITION (STATUS, POSITION_NAME, SUBORDINATION_LEVEL, DESCRIPTION, ID_DEPARTMENT) VALUES (?, ?, ?, ?, ?)";
 
         try {
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            if (department.getId() != null) {
-                preparedStatement.setLong(1, department.getId());
-                preparedStatement.setString(2, department.getName());
-                preparedStatement.setBoolean(3, department.isStatus());
-            } else {
-                preparedStatement.setString(1, department.getName());
-                preparedStatement.setBoolean(2, department.isStatus());
-            }
+            preparedStatement.setBoolean(1, position.isStatus());
+            preparedStatement.setString(2, position.getPositionName());
+            preparedStatement.setLong(3, position.getSubordinationLevel());
+            preparedStatement.setString(4, position.getDescription());
+            preparedStatement.setLong(5, position.getDepartment().getId());
+
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
-            department.setId(resultSet.getLong(1));
-
+            position.setId(resultSet.getLong(1));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -43,25 +39,28 @@ public class DepartmentService extends Util implements DepartmentDao {
                 e.printStackTrace();
             }
         }
-        return department;
+        return position;
     }
 
-    public List<Department> getAll() {
+    @Override
+    public List<Position> getAll() {
         Statement statement = null;
-        List<Department> list = new ArrayList<Department>();
-        String sql = "SELECT ID, NAME, STATUS FROM DEPARTMENT";
+        List<Position> list = new ArrayList<>();
+        String sql = "SELECT ID, STATUS, POSITION_NAME, SUBORDINATION_LEVEL, DESCRIPTION, ID_DEPARTMENT FROM POSITION";
 
         try {
-            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
-
             while (resultSet.next()) {
-                Department department = new Department();
-                department.setId(resultSet.getLong("ID"));
-                department.setName(resultSet.getString("NAME"));
-                department.setStatus(resultSet.getBoolean("STATUS"));
-                list.add(department);
+                Position position = new Position();
+                position.setId(resultSet.getLong("ID"));
+                position.setDescription(resultSet.getString("DESCRIPTION"));
+                position.setStatus(resultSet.getBoolean("STATUS"));
+                position.setPositionName(resultSet.getString("POSITION_NAME"));
+                DepartmentService departmentService = new DepartmentService();
+                position.setDepartment(departmentService.getById(resultSet.getLong("ID_DEPARTMENT")));
+                list.add(position);
             }
+            statement = connection.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -77,25 +76,28 @@ public class DepartmentService extends Util implements DepartmentDao {
         return list;
     }
 
-    public Department getById(Long id) {
+    @Override
+    public Position getById(Long id) {
         PreparedStatement preparedStatement = null;
-        String sql = "SELECT ID, NAME, STATUS FROM DEPARTMENT WHERE ID=?";
-        Department department = new Department();
+        String sql = "SELECT ID, STATUS, POSITION_NAME, SUBORDINATION_LEVEL, DESCRIPTION, ID_DEPARTMENT FROM POSITION WHERE ID=?";
+        Position position = new Position();
 
         try {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setLong(1, id);
-
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.isBeforeFirst()) {
                 resultSet.next();
-
-                department.setName(resultSet.getString("NAME"));
-                department.setId(resultSet.getLong("ID"));
-                department.setStatus(resultSet.getBoolean("STATUS"));
+                position.setStatus(resultSet.getBoolean("STATUS"));
+                position.setPositionName(resultSet.getString("POSITION_NAME"));
+                position.setDescription(resultSet.getString("DESCRIPTION"));
+                position.setId(resultSet.getLong("ID"));
+                position.setSubordinationLevel(resultSet.getLong("SUBORDINATION_LEVEL"));
+                DepartmentService departmentService = new DepartmentService();
+                position.setDepartment(departmentService.getById(position.getId()));
             } else {
-                System.out.println("Not found data in table DEPARTMENT");
+                System.out.println("Not found data in table POSITION");
                 System.out.println(sql + id);
             }
         } catch (SQLException e) {
@@ -110,17 +112,22 @@ public class DepartmentService extends Util implements DepartmentDao {
                 e.printStackTrace();
             }
         }
-        return department;
+        return position;
     }
 
-    public Department update(Department department) {
+    @Override
+    public Position update(Position position) {
         PreparedStatement preparedStatement = null;
-        String sql = "UPDATE DEPARTMENT SET NAME=?, STATUS=? WHERE ID=?";
+        String sql = "UPDATE POSITION SET STATUS=?, POSITION_NAME=?, SUBORDINATION_LEVEL=?, DESCRIPTION=?, ID_DEPARTMENT=? WHERE ID=?";
+
         try {
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, department.getName());
-            preparedStatement.setBoolean(2, department.isStatus());
-            preparedStatement.setLong(3, department.getId());
+            preparedStatement.setBoolean(1, position.isStatus());
+            preparedStatement.setString(2, position.getPositionName());
+            preparedStatement.setLong(3, position.getSubordinationLevel());
+            preparedStatement.setString(4, position.getDescription());
+            preparedStatement.setLong(5, position.getDepartment().getId());
+            preparedStatement.setLong(6, position.getId());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -135,16 +142,16 @@ public class DepartmentService extends Util implements DepartmentDao {
                 e.printStackTrace();
             }
         }
-        return department;
+        return position;
     }
 
-    public void remove(Department department) {
+    @Override
+    public void remove(Position position) {
         PreparedStatement preparedStatement = null;
-        String sql = "DELETE FROM DEPARTMENT WHERE ID=?";
+        String sql = "DELETE FROM POSITION WHERE ID=?";
         try {
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, department.getId());
-
+            preparedStatement.setLong(1, position.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -160,14 +167,13 @@ public class DepartmentService extends Util implements DepartmentDao {
         }
     }
 
+    @Override
     public void delete(Integer id) {
         PreparedStatement preparedStatement = null;
-        String sql = "DELETE FROM DEPARTMENT WHERE ID=?";
-//        System.out.printf("ID_department SERVICE: %d%n", id);
+        String sql = "DELETE FROM POSITION WHERE ID=?";
         try {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
-
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -181,5 +187,6 @@ public class DepartmentService extends Util implements DepartmentDao {
                 e.printStackTrace();
             }
         }
+
     }
 }
